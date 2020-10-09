@@ -11,8 +11,17 @@ public class AWSConsumer {
         log.info(":::::AWSConsumer has been started:::::");
     }
 
-    @KafkaListener(topics = "bulk")
-    public void consumes(ConsumerRecord<String, Object> message) {
-        log.info(":::AWSConsumer Class ,consumes method::::");
+    @KafkaListener(topics = "simpleText", containerFactory = "kafkaListenerContainerFactory")
+    public void consumeText(ConsumerRecord<String, Object> message) {
+        log.info(":::AWSConsumer Class ,consumeText method::::");
+        log.info("::::::messageValue {}", message.value());
+        log.info("::::::messageKey {}", message.key());
+    }
+
+    @KafkaListener(topics = "object", containerFactory = "kafkaListenerContainerFactory")
+    public void consumesObject(ConsumerRecord<String, Object> message) {
+        log.info(":::::AWSConsumer Classs, consumesObject method::::");
+        log.info("::::::messageValue {}", message.value());
+
     }
 }

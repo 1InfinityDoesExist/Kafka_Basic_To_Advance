@@ -44,12 +44,12 @@ public class AWSProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<Integer, String> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<Integer, String> kafkaTemplae() {
+    public KafkaTemplate<String, Object> kafkaTemplae() {
         return new KafkaTemplate<>(producerFactory());
     }
 

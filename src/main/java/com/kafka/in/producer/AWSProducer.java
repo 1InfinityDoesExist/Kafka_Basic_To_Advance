@@ -10,15 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 public class AWSProducer {
 
     @Autowired
-    private KafkaTemplate<Integer, String> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     AWSProducer() {
         log.info(":::::::::AWSProducer started");
     }
 
-    public ListenableFuture<SendResult<Integer, String>> sendMessage(String topic, String message) {
+    public ListenableFuture<SendResult<String, Object>> sendMessage(String topic, Object message) {
         log.info(":::::Inside AWSProducer Class, sendMessage method:::::");
-        ListenableFuture<SendResult<Integer, String>> future = kafkaTemplate.send(topic, message);
+        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, message);
         return future;
     }
 
