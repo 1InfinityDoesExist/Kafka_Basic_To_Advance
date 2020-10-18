@@ -21,5 +21,4 @@ public class AWSProducer {
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, message);
         return future;
     }
-
 }

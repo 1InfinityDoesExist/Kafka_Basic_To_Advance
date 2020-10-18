@@ -6,10 +6,12 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -32,6 +34,12 @@ public class AWSConsumerConfig {
     private String autoCommitInterval;
     @Value("${spring.kafka.consumer.session.timeout}")
     private String sessionTimeout;
+    @Value("${spring.kafka.consumer.factory.concurrency:4}")
+    private int concurrency;
+    @Value("${spring.kafka.consumer.timeout:10000}")
+    private int timeout;
+    @Value("${spring.kafka.consumer.pool.size:10}")
+    private int poolSize;
 
 
     @Bean
@@ -58,7 +66,17 @@ public class AWSConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                         new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setConcurrency(concurrency);
+        factory.getContainerProperties().setPollTimeout(timeout);
+        factory.getContainerProperties().setConsumerTaskExecutor(executor());
         return factory;
+    }
+
+    @Bean
+    public AsyncListenableTaskExecutor executor() {
+        ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
+        tpte.setCorePoolSize(poolSize);
+        return tpte;
     }
 
     @Bean("awsConsumer")

@@ -41,7 +41,7 @@ public class CommonController {
     }
 
 
-    @PostMapping(value = "/object/{topic}")
+    @PostMapping(value = "/asset/{topic}")
     public ResponseEntity<?> sendObject(
                     @PathVariable(value = "topic", required = true) String topic,
                     @RequestBody User user) {
@@ -49,6 +49,17 @@ public class CommonController {
         return ResponseEntity.status(HttpStatus.OK)
                         .body(new ModelMap().addAttribute("msg", "Message Sent"));
     }
+
+    @PostMapping(value = "/object/{topic}")
+    public ResponseEntity<?> sendAsset(
+                    @PathVariable(value = "topic", required = true) String topic,
+                    @RequestBody String user) {
+        log.info(":::::topic Name is  : {}", topic);
+        awsProducer.sendMessage(topic, user);
+        return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ModelMap().addAttribute("msg", "Message Sent"));
+    }
+
 
     @GetMapping(path = "/get/{id}")
     public ResponseEntity<?> testingOldConsumer(
